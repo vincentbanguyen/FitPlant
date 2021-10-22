@@ -19,7 +19,7 @@
                                 <action selector="cloudButtonPressedWithSender:" destination="AgC-eL-Hgc" id="ZZx-Lk-6iO"/>
                             </connections>
                         </button>
-                        <imageView width="51" height="10" alignment="center" verticalAlignment="center" id="SnH-dV-G0c" userLabel="rainVIew"/>
+                        <imageView width="51" height="23" alignment="center" verticalAlignment="center" id="SnH-dV-G0c" userLabel="rainVIew"/>
                         <imageView width="81" height="71" alignment="center" verticalAlignment="center" image="plant" id="wbm-r8-13P" userLabel="plant"/>
                         <group width="1" alignment="left" verticalAlignment="center" id="cRM-QD-Bmb">
                             <items>

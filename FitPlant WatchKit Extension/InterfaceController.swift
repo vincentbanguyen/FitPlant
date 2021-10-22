@@ -70,7 +70,7 @@ class InterfaceController: WKInterfaceController {
         if isPlaying == false && plantData[0].steps > 100 {
             isPlaying = true
             
-            plantData[0].waterLevel += 2
+            plantData[0].waterLevel += Int16.random(in: 2...4)
             
             
             plantData[0].steps -= 100
@@ -84,13 +84,13 @@ class InterfaceController: WKInterfaceController {
             // changing plant image
             
             if plantData[0].waterLevel < 33 {
-                plant.setImage(UIImage(named: "plantdead"))
+                plant.setImage(UIImage(named: "plantdead.png"))
             }
-            else if plantData[0].waterLevel >= 33 {
-                plant.setImage(UIImage(named: "plant"))
+            else if plantData[0].waterLevel < 60 {
+                plant.setImage(UIImage(named: "plant.png"))
             }
-            else {
-                plant.setImage(UIImage(named: "planthappy"))
+            else if plantData[0].waterLevel >= 60 {
+                plant.setImage(UIImage(named: "planthappy.png"))
             }
         }
     }
@@ -101,15 +101,74 @@ class InterfaceController: WKInterfaceController {
         loadData()
         autorizeHealthKit()
         // initliazer
+        
+        
         if plantData.count == 0 {
             DispatchQueue.main.asyncAfter(deadline: .now() + 5) { [self] in
+                
+                let entity =
+                   NSEntityDescription.entity(forEntityName: "PlantData",
+                                              in: moc!)!
+                
+                let plantDataItem = PlantData(entity: entity,
+                                               insertInto: moc)
+                
+                plantDataItem.setValue(0, forKeyPath: "steps")
+                plantDataItem.setValue(50, forKeyPath: "waterLevel")
+                plantDataItem.setValue(0, forKeyPath: "previousPulledSteps")
+                
+                plantData.append(plantDataItem)
+                
                 loadData()
                 plantData[0].steps = 0
                 print("DEBUGGG")
                 plantData[0].waterLevel = 50
+                
+                Timer.scheduledTimer(withTimeInterval: 5, repeats: true, block: { [self]_ in
+                    getTodaysSteps() { [self] (steps) in
+                        if steps == 0.0 {
+                            print("oh no")
+                            print("steps :: \(Int(steps))")
+                            
+                            
+                            plantData[0].steps = Int16(steps)
+                         
+                            cloudButton.setTitle("\(Int(steps))")
+                        }
+                        else {
+                            DispatchQueue.main.async {
+                                
+                                let additionalSteps = steps - Double(plantData[0].previousPulledSteps)
+                                
+                                plantData[0].previousPulledSteps = Int16(steps)
+                                
+                                plantData[0].steps += Int16(additionalSteps)
+                           
+                                cloudButton.setTitle("\(Int(plantData[0].steps))")
+                                extensionDelegate?.saveContext()
+                            }
+                        }
+                    }
+                })
+                
                 extensionDelegate?.saveContext()
+                
+                if plantData[0].waterLevel < 33 {
+                    plant.setImage(UIImage(named: "plantdead.png"))
+                }
+                else if plantData[0].waterLevel < 60 {
+                    plant.setImage(UIImage(named: "plant.png"))
+                }
+                else if plantData[0].waterLevel >= 60 {
+                    plant.setImage(UIImage(named: "planthappy.png"))
+                }
+                
             }
         }
+        
+        
+        
+        
         
         else {
             
@@ -117,6 +176,10 @@ class InterfaceController: WKInterfaceController {
                 plantData[0].waterLevel -= Int16.random(in: 5...10)
             }
             
+            // for testing
+            plantData[0].steps = 9880
+            plantData[0].waterLevel = 10
+//
             extensionDelegate?.saveContext()
             
             waterLevelLabel.setText("\(plantData[0].waterLevel)%")
@@ -126,7 +189,16 @@ class InterfaceController: WKInterfaceController {
             
             waterLevelLabel.setTextColor(UIColor(red: 58/255, green: 174/255, blue: 201/255, alpha: 1))
     //        stepsLabel.setTextColor(UIColor(red: 58/255, green: 174/255, blue: 201/255, alpha: 1))
-
+            
+            if plantData[0].waterLevel < 33 {
+                plant.setImage(UIImage(named: "plantdead.png"))
+            }
+            else if plantData[0].waterLevel < 60 {
+                plant.setImage(UIImage(named: "plant.png"))
+            }
+            else if plantData[0].waterLevel >= 60 {
+                plant.setImage(UIImage(named: "planthappy.png"))
+            }
             
             
 
@@ -140,31 +212,32 @@ class InterfaceController: WKInterfaceController {
             // push cloudsteps to firebase
             
             
-            Timer.scheduledTimer(withTimeInterval: 5, repeats: true, block: { [self]_ in
-                getTodaysSteps() { [self] (steps) in
-                    if steps == 0.0 {
-                        print("oh no")
-                        print("steps :: \(Int(steps))")
-                        
-                        plantData[0].steps = Int16(steps)
-                     
-                        cloudButton.setTitle("\(Int(steps))")
-                    }
-                    else {
-                        DispatchQueue.main.async {
-                            
-                            let additionalSteps = steps - Double(plantData[0].previousPulledSteps)
-                            
-                            plantData[0].previousPulledSteps = Int16(steps)
-                            
-                            plantData[0].steps += Int16(additionalSteps)
-                       
-                            cloudButton.setTitle("\(Int(plantData[0].steps))")
-                            extensionDelegate?.saveContext()
-                        }
-                    }
-                }
-            })
+//            Timer.scheduledTimer(withTimeInterval: 5, repeats: true, block: { [self]_ in
+//                getTodaysSteps() { [self] (steps) in
+//                    if steps == 0.0 {
+//                        print("oh no")
+//                        print("steps :: \(Int(steps))")
+//
+//
+//                        plantData[0].steps = Int16(steps)
+//
+//                        cloudButton.setTitle("\(Int(steps))")
+//                    }
+//                    else {
+//                        DispatchQueue.main.async {
+//
+//                            let additionalSteps = steps - Double(plantData[0].previousPulledSteps)
+//
+//                            plantData[0].previousPulledSteps = Int16(steps)
+//
+//                            plantData[0].steps += Int16(additionalSteps)
+//
+//                            cloudButton.setTitle("\(Int(plantData[0].steps))")
+//                            extensionDelegate?.saveContext()
+//                        }
+//                    }
+//                }
+//            })
         }
        
         
@@ -220,7 +293,7 @@ class InterfaceController: WKInterfaceController {
     private func nextFrame() {
         guard let coder = coder else { return }
 
-        currentFrame += 2
+        currentFrame += 1
         // make sure that current frame is within frame count
         // if reaches the end, we set it back to 0 so it loops
         if currentFrame >= coder.animatedImageFrameCount {
@@ -238,7 +311,7 @@ class InterfaceController: WKInterfaceController {
         playing = true
 
         animationTimer?.invalidate()
-        animationTimer = Timer.scheduledTimer(withTimeInterval: 0.0000001, repeats: true, block: { (timer) in
+        animationTimer = Timer.scheduledTimer(withTimeInterval: 0.01, repeats: true, block: { (timer) in
             guard self.playing else {
                 timer.invalidate()
                 return
