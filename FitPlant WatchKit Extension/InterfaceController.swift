@@ -177,8 +177,8 @@ class InterfaceController: WKInterfaceController {
             }
             
             // for testing
-            plantData[0].steps = 9880
-            plantData[0].waterLevel = 10
+//            plantData[0].steps = 9880
+//            plantData[0].waterLevel = 10
 //
             extensionDelegate?.saveContext()
             
