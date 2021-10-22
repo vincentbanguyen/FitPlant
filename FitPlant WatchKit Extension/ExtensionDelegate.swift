@@ -6,14 +6,23 @@
 //
 
 import WatchKit
+import CoreData
+
+
+// 3
+let extensionDelegate = WKExtension.shared().delegate as? ExtensionDelegate
+var moc = extensionDelegate?.persistentContainer.viewContext
+
 
 class ExtensionDelegate: NSObject, WKExtensionDelegate {
 
     func applicationDidFinishLaunching() {
+        print("applicationDidFinishLaunching")
         // Perform any final initialization of your application.
     }
 
     func applicationDidBecomeActive() {
+        print("applicationDidBecomeActive")
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
     }
 
@@ -51,5 +60,29 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate {
             }
         }
     }
+    
+    lazy var persistentContainer: NSPersistentContainer = {
+          let container = NSPersistentContainer(name: "WatchOsCoreData")
+           container.loadPersistentStores(completionHandler: { storeDescription, error in
+               if let error = error as NSError? {
+                   fatalError("Unresolved Error \(error), \(error.userInfo)")
+               }
+           })
+           return container
+       }()
+       
+       func saveContext() {
+           let context = persistentContainer.viewContext
+           if context.hasChanges {
+               do {
+                   try context.save()
+               } catch {
+                   let nserror = error as NSError
+                   fatalError("Unresolved Error \(nserror), \(nserror.userInfo)")
+               }
+           }
+       }
+    
+    
 
 }

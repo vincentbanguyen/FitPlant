@@ -1,15 +1,47 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="11134" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="AgC-eL-Hgc">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="19162" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="AgC-eL-Hgc">
+    <device id="watch42"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11106"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="11055"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19144"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="19044"/>
     </dependencies>
     <scenes>
         <!--Interface Controller-->
         <scene sceneID="aou-V4-d1y">
             <objects>
-                <controller id="AgC-eL-Hgc" customClass="InterfaceController" customModuleProvider="target"/>
+                <controller id="AgC-eL-Hgc" customClass="InterfaceController" customModule="FitPlant_WatchKit_App" customModuleProvider="target">
+                    <items>
+                        <button width="89" height="47" alignment="center" verticalAlignment="center" backgroundImage="cloud" id="PBd-ph-zt8" userLabel="cloudStep">
+                            <accessibilityTraits key="accessibilityTraits" button="YES" staticText="YES"/>
+                            <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <fontDescription key="font" type="system" pointSize="13"/>
+                            <connections>
+                                <action selector="cloudButtonPressedWithSender:" destination="AgC-eL-Hgc" id="ZZx-Lk-6iO"/>
+                            </connections>
+                        </button>
+                        <imageView width="51" height="10" alignment="center" verticalAlignment="center" id="SnH-dV-G0c" userLabel="rainVIew"/>
+                        <imageView width="81" height="71" alignment="center" verticalAlignment="center" image="plant" id="wbm-r8-13P" userLabel="plant"/>
+                        <group width="1" alignment="left" verticalAlignment="center" id="cRM-QD-Bmb">
+                            <items>
+                                <imageView width="14" height="16" alignment="center" verticalAlignment="center" image="waterdrop" id="GWL-77-xrF"/>
+                                <label alignment="center" verticalAlignment="center" text="Label" id="zhZ-bD-YTW" userLabel="waterLevel"/>
+                            </items>
+                        </group>
+                    </items>
+                    <connections>
+                        <outlet property="cloudButton" destination="PBd-ph-zt8" id="N78-LI-zby"/>
+                        <outlet property="plant" destination="wbm-r8-13P" id="0qc-52-w2t"/>
+                        <outlet property="rainVIew" destination="SnH-dV-G0c" id="hwj-5J-kzF"/>
+                        <outlet property="waterLevelLabel" destination="zhZ-bD-YTW" id="BqX-vp-hwz"/>
+                    </connections>
+                </controller>
             </objects>
+            <point key="canvasLocation" x="-25.282051282051285" y="-142.53846153846155"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="cloud" width="3436" height="1741"/>
+        <image name="plant" width="3410" height="3015"/>
+        <image name="waterdrop" width="32" height="42"/>
+    </resources>
 </document>
